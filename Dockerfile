@@ -5,6 +5,7 @@ FROM openjdk:8-jdk-slim
 # - git:             fetching sources occurs inside the container
 # - libgl1-mesa-glx: for Android emulator
 # - libpulse0:       for Android emulator
+# - openssh-client:  for Git-related operations
 # - rsync:           to help sync Gradle caches
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
@@ -13,6 +14,7 @@ RUN apt-get update && \
         git \
         libgl1-mesa-glx \
         libpulse0 \
+        openssh-client \
         rsync && \
     rm -rf /var/lib/apt/lists/*
 
