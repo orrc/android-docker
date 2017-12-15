@@ -6,6 +6,7 @@ FROM openjdk:8-jdk-slim
 # - libgl1-mesa-glx: for Android emulator
 # - libpulse0:       for Android emulator
 # - openssh-client:  for Git-related operations
+# - procps:          for `ps`, required by Jenkins Docker Pipeline Plugin
 # - rsync:           to help sync Gradle caches
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
@@ -15,6 +16,7 @@ RUN apt-get update && \
         libgl1-mesa-glx \
         libpulse0 \
         openssh-client \
+        procps \
         rsync && \
     rm -rf /var/lib/apt/lists/*
 
