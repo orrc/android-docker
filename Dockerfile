@@ -35,6 +35,9 @@ RUN mkdir -p ${ANDROID_HOME} && \
 USER android
 ENV HOME /home/android
 
+# Enable Java options for Docker
+ENV JAVA_TOOL_OPTIONS -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
+
 # Put the Android SDK Tools on the PATH
 ENV PATH=${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:${PATH}
 
