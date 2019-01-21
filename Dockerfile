@@ -62,10 +62,15 @@ RUN curl --silent --show-error --fail --retry 1 --output /tmp/sdk.zip --location
         | xargs -0 rm && \
     rm /tmp/checksum /tmp/sdk.zip
 
-# Accept all SDK licences, update the Android SDK Tools to the latest, and install the basics
+# Accept all SDK licences
 RUN sdkmanager --verbose --update && \
-    yes | sdkmanager --licenses && \
-    sdkmanager --verbose \
+    yes | sdkmanager --licenses
+
+# Accept the January 2019 licence explicitly, as a workaround for https://issuetracker.google.com/issues/123054726
+RUN echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "${ANDROID_HOME}/licenses/android-sdk-license"
+
+# Update the Android SDK Tools to the latest, and install the basics
+RUN sdkmanager --verbose \
       tools \
       platform-tools \
       emulator
