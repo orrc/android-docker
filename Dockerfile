@@ -73,5 +73,5 @@ RUN sdkmanager --verbose --update && \
 # Install the desired platform version and Build Tools
 RUN sdkmanager --verbose --update && \
     sdkmanager --verbose --install \
-    'platforms;android-27' \
-    'build-tools;26.0.2'
+    'platforms;android-28' \
+    'build-tools;28.0.3'
