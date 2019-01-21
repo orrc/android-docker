@@ -46,8 +46,8 @@ RUN mkdir ~/.android && touch ~/.android/repositories.cfg
 
 # Define the download URL and SHA-256 checksum of the Android SDK Tools;
 # both can be found at https://developer.android.com/studio/index.html#command-tools
-ARG ANDROID_SDK_URL=https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip
-ARG ANDROID_SDK_CHECKSUM=444e22ce8ca0f67353bda4b85175ed3731cae3ffa695ca18119cbacef1c1bea0
+ARG ANDROID_SDK_URL=https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
+ARG ANDROID_SDK_CHECKSUM=92ffee5a1d98d856634e8b71132e8a95d96c83a63fde1099be3d86df3106def9
 
 # Download the Android SDK Tools, verify the checksum, extract to ANDROID_HOME, then
 # remove everything but sdkmanager and its dependencies to keep the layer size small
