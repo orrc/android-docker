@@ -17,7 +17,8 @@ RUN apt-get update && \
         libpulse0 \
         openssh-client \
         procps \
-        rsync && \
+        rsync \
+        unzip && \
     rm -rf /var/lib/apt/lists/*
 
 # Create an android user/group, with Jenkins-compatible UID
@@ -39,35 +40,27 @@ ENV HOME /home/android
 ENV JAVA_TOOL_OPTIONS -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
 
 # Put the Android SDK Tools on the PATH
-ENV PATH=${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:${PATH}
+ENV PATH=${ANDROID_HOME}/tools:${ANDROID_HOME}/emulator:${ANDROID_HOME}/cmdline-tools/tools/bin:${ANDROID_HOME}/platform-tools:${PATH}
 
 # Stop sdkmanager from complaining
 RUN mkdir ~/.android && touch ~/.android/repositories.cfg
 
 # Define the download URL and SHA-256 checksum of the Android SDK Tools;
 # both can be found at https://developer.android.com/studio/index.html#command-tools
-ARG ANDROID_SDK_URL=https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
-ARG ANDROID_SDK_CHECKSUM=92ffee5a1d98d856634e8b71132e8a95d96c83a63fde1099be3d86df3106def9
+ARG ANDROID_SDK_URL=https://dl.google.com/android/repository/commandlinetools-linux-6200805_latest.zip
+ARG ANDROID_SDK_CHECKSUM=f10f9d5bca53cc27e2d210be2cbc7c0f1ee906ad9b868748d74d62e10f2c8275
 
 # Download the Android SDK Tools, verify the checksum, extract to ANDROID_HOME, then
 # remove everything but sdkmanager and its dependencies to keep the layer size small
 RUN curl --silent --show-error --fail --retry 1 --output /tmp/sdk.zip --location ${ANDROID_SDK_URL} && \
     echo "${ANDROID_SDK_CHECKSUM}  /tmp/sdk.zip" > /tmp/checksum && \
     sha256sum -c /tmp/checksum > /dev/null && \
-    unzip -q /tmp/sdk.zip -d ${ANDROID_HOME} && \
-    jars=$(grep CLASSPATH ${ANDROID_HOME}/tools/bin/sdkmanager \
-      | egrep -i -o '([^/:]+\.jar)' | paste -s -d\| -) && \
-    find ${ANDROID_HOME}/tools -type f -regextype posix-egrep \
-      -not -name sdkmanager -not -regex ".*($jars)" -print0 \
-        | xargs -0 rm && \
+    unzip -q /tmp/sdk.zip -d ${ANDROID_HOME}/cmdline-tools && \
     rm /tmp/checksum /tmp/sdk.zip
 
 # Accept all SDK licences
 RUN sdkmanager --verbose --update && \
     yes | sdkmanager --licenses
-
-# Accept the January 2019 licence explicitly, as a workaround for https://issuetracker.google.com/issues/123054726
-RUN echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "${ANDROID_HOME}/licenses/android-sdk-license"
 
 # Update the Android SDK Tools to the latest, and install the basics
 RUN sdkmanager --verbose \
@@ -78,5 +71,5 @@ RUN sdkmanager --verbose \
 # Install the desired platform version and Build Tools
 RUN sdkmanager --verbose --update && \
     sdkmanager --verbose --install \
-    'platforms;android-28' \
-    'build-tools;28.0.3'
+    'platforms;android-29' \
+    'build-tools;29.0.3'
